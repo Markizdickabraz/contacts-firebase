@@ -4,10 +4,14 @@ import { IoIosSearch } from "react-icons/io";
 import { FaPlusCircle } from "react-icons/fa";
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from './config/firebase';
+import ContactCard from "./components/ContactCard";
+
+
+
 
 const App = () => {
 
-  // const [contancts, setContacts] = useState([]);
+  const [contacts, setContacts] = useState([]);
 
   useEffect(() => {
 
@@ -15,8 +19,13 @@ const App = () => {
       try {
         const contactsRef = collection(db, 'contacts');
         const contactsSnapshot = await getDocs(contactsRef);
-        const contactsList = contactsSnapshot.docs.map((doc) => doc.data());
-        console.log(contactsList);
+        const contactsList = contactsSnapshot.docs.map((doc) => {
+          return {
+            id: doc.id,
+            ...doc.data()
+          }
+        });
+        setContacts(contactsList);
       } catch (error) {
         console.log(error)
       }
@@ -35,7 +44,13 @@ const App = () => {
         <input type="text" className=" h-10 flex-grow bg-transparent border border-white rounded-md text-white pl-9" />
       </div>
       <FaPlusCircle className="text-5xl cursor-pointer text-white"/>
-     </div>
+      </div>
+      
+      {contacts && <div className="mt-4">
+        {contacts.map((contact) => (
+         <ContactCard key={contact.id} contact ={contact} />
+        ))}
+          </div>}
     </div>
   )
 }
