@@ -1,31 +1,48 @@
 import Modal from "./Modal";
 import { Form, Formik, Field } from "formik";
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, doc, updateDoc } from "firebase/firestore";
 import { db } from "../config/firebase";
+import { toast } from "react-toastify";
 
-const AddAndUpdateContact = ({ isOpen, onClose }) => {
+
+const AddAndUpdateContact = ({ isOpen, onClose, isUpdate, contact }) => {
 
     const addContact = async (contact) => {
         try {
             const contactRef = collection(db, 'contacts');
             await addDoc(contactRef, contact);
+            toast.success('add contact');
         } catch (error) {
-            console.log(error);
+                toast.error(error.message);
         }
     };
+
+    const updateContact = async (contact ,id) => {
+        try {
+            const contactRef = doc(db, 'contacts' ,id);
+            await updateDoc(contactRef, contact);
+            toast.success('update contact');
+        } catch (error) {
+                toast.error(error.message);
+        }
+    };  
 
 
     return (
         <div>
             <Modal isOpen={isOpen} onClose={onClose}>
-                <Formik initialValues={{
+                <Formik initialValues={isUpdate ? {
+                    name: contact.name,
+                    email: contact.email,
+                    phone: contact.phone,
+                } :{
                     name: '',
                     email: '',
                     phone: '',
                 }}
                     onSubmit={(values , {resetForm}) => {
                         console.log(values);
-                        addContact(values);
+                        isUpdate ? updateContact(values, contact.id) : addContact(values);
                         resetForm();
                         onClose();
                 }}
@@ -44,7 +61,7 @@ const AddAndUpdateContact = ({ isOpen, onClose }) => {
                         <Field name='phone' className='border h-10 pl-3 rounded-lg' />
                         </div>
                         <button type='submit' className="bg-orange px-3 py-1.5 border self-end rounded-lg">
-                            add contact
+                            {isUpdate ? 'update' : 'add'} contact
                         </button>
                     </Form>
                 </Formik>
