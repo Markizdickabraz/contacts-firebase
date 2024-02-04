@@ -14,7 +14,8 @@ import useDiscouse from "./hooks/useDiscouse";
 const App = () => {
 
   const [contacts, setContacts] = useState([]);
-   const {isOpen, onClose, onOpen} = useDiscouse(false);
+  const { isOpen, onClose, onOpen } = useDiscouse(false);
+  const [filter, setFilter] = useState('');
 
 
   useEffect(() => {
@@ -33,20 +34,21 @@ const App = () => {
           return contactsList;
         });
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
     }
     getContacts();
   }, []);
 
-  const filterContacts = (e) => {
 
-    const value = e.target.value;
-    console.log(value);
-    
-    const filter = contacts.filter((contact) => { contact !== value });
-    console.log(filter);
+  const chengeFilter = e => {
+    setFilter(e.target.value);
   };
+
+  const normalizedFilter = filter.toLowerCase();
+  let filtredComponents = contacts.filter(contact => contact.name.toLowerCase().includes(normalizedFilter));
+  console.log(filtredComponents);
+
 
   return (
     <>
@@ -55,20 +57,21 @@ const App = () => {
         <div className="flex gap-2">
           <div className="flex relative items-center flex-grow">
             <IoIosSearch className="text-white text-3xl absolute ml-1" />
-            <input onChange={filterContacts} type="text" className=" h-10 flex-grow bg-transparent border border-white rounded-md text-white pl-9" />
+            <input onChange={chengeFilter} type="text" className=" h-10 flex-grow bg-transparent border border-white rounded-md text-white pl-9" />
           </div>
           <FaCirclePlus onClick={onOpen} className="text-5xl cursor-pointer text-white" />
         </div>
-      
-        <div className="mt-4 flex gap-1.5 flex-col">
-          {contacts.map((contact) => (
-            <ContactCard key={contact.id} contact={contact} />
-          ))}
-        </div>
+        {filtredComponents.length > 0 &&
+          <div className="mt-4 flex gap-1.5 flex-col">
+            {filtredComponents.map((contact) => (
+              <ContactCard key={contact.id} contact={contact} />
+            ))}
+          </div> 
+        }
       </div>
       <AddAndUpdateContact isOpen={isOpen} onClose={onClose} />
       <ToastContainer position="bottom-center" />
-    </>
+        </> 
   );
 };
 
