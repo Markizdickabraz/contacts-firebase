@@ -54,11 +54,11 @@ const App = () => {
           <FaCirclePlus onClick={onOpen} className="text-5xl cursor-pointer text-white" />
         </div>
       
-        {contacts && <div className="mt-4 flex gap-3 flex-col">
+        <div className="mt-4 flex gap-3 flex-col">
           {contacts.map((contact) => (
             <ContactCard key={contact.id} contact={contact} />
           ))}
-        </div>}
+        </div>
       </div>
      <AddAndUpdateContact isOpen={isOpen} onClose={onClose}/>
     </>
