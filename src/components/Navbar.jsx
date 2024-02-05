@@ -1,8 +1,11 @@
+import { PiPhoneDisconnectBold } from "react-icons/pi";
+
+
 const Navbar = () => {
   return (
-    <div className="h-[60px] bg-white my-2 rounded-lg flex justify-center items-center gap-2 text-xl font-medium">
-              <img src="/firebase.svg" alt="firebase icon" />
-              <h1>Firebase Contact App</h1>
+    <div className="h-[60px] bg-white my-2 rounded-lg flex justify-center items-center gap-3 text-xl font-medium">
+              <PiPhoneDisconnectBold />
+              <h1>Firebase Contact</h1>
     </div>
   )
 }

@@ -7,8 +7,9 @@ import { db } from './config/firebase';
 import ContactCard from "./components/ContactCard";
 import AddAndUpdateContact from "./components/AddAndUpdateContact";
 import useDiscouse from "./hooks/useDiscouse";
- import { ToastContainer } from 'react-toastify';
-  import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import NotFoundContact from "./components/NotFoundContact";
 
 
 const App = () => {
@@ -60,7 +61,9 @@ const App = () => {
           </div>
           <FaCirclePlus onClick={onOpen} className="text-5xl cursor-pointer text-white" />
         </div>
-        {filtredComponents.length > 0 &&
+        {contacts.length <= 0 ?
+          <NotFoundContact /> :
+          filtredComponents.length > 0 &&
           <div className="mt-4 flex gap-1.5 flex-col">
             {filtredComponents.map((contact) => (
               <ContactCard key={contact.id} contact={contact} />
